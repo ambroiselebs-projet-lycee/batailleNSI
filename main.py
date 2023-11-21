@@ -14,11 +14,11 @@ class Carte:
 
     def get_nom(self):
         """Renvoie le nom de la Carte As, 2, ... 10, Valet, Dame, Roi"""
-        if (VALEURS[self.valeur] == 'Valet') return '11'
-        elif (VALEURS[self.valeur] == 'Dame') return '12'
-        elif (VALEURS[self.valeur] == 'Roi') return '13'
-        elif (VALEURS[self.valeur] == 'As') return '14'
-        else return VALEURS[self.valeur]
+        if (VALEURS[self.valeur] == 'Valet'): return 11
+        elif (VALEURS[self.valeur] == 'Dame'): return 12
+        elif (VALEURS[self.valeur] == 'Roi'): return 13
+        elif (VALEURS[self.valeur] == 'As'): return 14
+        else: return int(VALEURS[self.valeur])
 
     def get_couleur(self):
         """Renvoie la couleur de la Carte (parmi pique, coeur, carreau, trefle)"""
@@ -39,36 +39,74 @@ class PaquetDeCarte:
         if 0 <= pos < 52:
             return self.contenu[pos]
 
+    def remove(self, carte):
+        """Enlève la carte du paquet"""
+        self.contenu.remove(carte)
 
-paquet = PaquetDeCarte()
-paquet.remplir()
-jeu1 = paquet.contenu[:26]
-jeu2 = paquet.contenu[26:]
-tapis = []
+    def melanger(self):
+        """Mélange le paquet de cartes"""
+        random.shuffle(self.contenu)
 
-while jeu1 != [] or jeu2 != []:
-    tapis.append(jeu1[0])
-    tapis.append(jeu2[0])
 
-    if int(tapis[0].get_nom()) > int(tapis[1].get_nom()):
-        # Joueur 1 gagne -> il récupère les cartes du tapis
-        jeu1.append(tapis[0])
-        jeu1.append(tapis[1])
+def jeu():
+    paquet = PaquetDeCarte()
+    paquet.remplir()
+    paquet.melanger()
+    jeu1 = paquet.contenu[:26]
+    jeu2 = paquet.contenu[26:]
+    comparateur = []
+    tapis = []
 
-        # Joueur 2 perd -> il retire sa carte
-        jeu2.remove(tapis[1])
+    while jeu1 and jeu2:
 
-        tapis = []
-    elif int(tapis[0].get_nom() < int(tapis[1].get_nom())):
-        # Joueur 2 gagne -> il récupère les cartes du tapis
-        jeu2.append(tapis[0])
-        jeu2.append(tapis[1])
+        comparateur.append(jeu1[0].get_nom())
+        comparateur.append(jeu2[0].get_nom())
+        tapis.append(jeu1[0])
+        tapis.append(jeu2[0])
 
-        # Joueur 1 perd -> il retire sa carte
-        jeu1.remove(tapis[0])
+        # print(f"comparateur : {comparateur}")
 
-        tapis = []
-    elif int(tapis[0].get_nom() == int(tapis[1].get_nom())):
-        tapis.append(jeu1[1])
-        tapis.append(jeu2[1]) 
+        jeu1.remove(jeu1[0])
+        jeu2.remove(jeu2[0])
 
+        if comparateur[0] > comparateur[1]:
+            # Joueur 1 gagne -> il récupère les cartes du comparateur
+            jeu1.append(tapis[0])
+            jeu1.append(tapis[1])
+
+            comparateur = []
+            tapis = []
+        elif comparateur[0] < comparateur[1]:
+            # Joueur 2 gagne -> il récupère les cartes du comparateur
+            jeu2.append(tapis[0])
+            jeu2.append(tapis[1])
+
+            comparateur = []
+            tapis = []
+        elif comparateur[0] == comparateur[1]:
+            # Bataille
+            n= 1
+
+            while comparateur[0] == comparateur[1]:
+                for i in range(2):
+                    comparateur.append(jeu1[0].get_nom())
+                    comparateur.append(jeu2[0].get_nom())
+                    tapis.append(jeu1[0])
+                    tapis.append(jeu2[0])
+                    n+=2
+                    jeu1.remove(jeu1[0])
+                    jeu2.remove(jeu2[0])
+                if comparateur[n-1] > comparateur[n]:
+                    for i in tapis: jeu1.append(i)
+                    comparateur = []
+                    tapis = []
+                    break
+                elif comparateur[n-1] < comparateur[n]:
+                    for i in tapis: jeu2.append(i)
+                    tapis = []
+                    comparateur = []
+                    break
+
+    return True
+            
+jeu()

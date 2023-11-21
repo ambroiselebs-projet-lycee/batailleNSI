@@ -41,7 +41,7 @@ class PaquetDeCarte:
 
     def remove(self, carte):
         """Enlève la carte du paquet"""
-        self.contenu.remove(carte)
+        self.contenu.pop(carte)
 
     def melanger(self):
         """Mélange le paquet de cartes"""

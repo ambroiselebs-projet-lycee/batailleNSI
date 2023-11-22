@@ -91,7 +91,7 @@ def jeu():
             print("BATAILLE")
 
             while comparateur[n-1] == comparateur[n]:
-                if jeu1 and jeu2:
+                if len(jeu1)>=2 and len(jeu2)>=2:
                     for i in range(2):
                         comparateur.append(jeu1[0].get_nom())
                         comparateur.append(jeu2[0].get_nom())
@@ -112,6 +112,19 @@ def jeu():
                         tapis = []
                         comparateur = []
                         break
+                    break
+                elif len(jeu1)<2:
+                    print(comparateur)
+                    for i in tapis: jeu2.append(i)
+                    tapis = []
+                    comparateur = []
+                    break
+                elif len(jeu2)<2:
+                    print(comparateur)
+                    for i in tapis: jeu1.append(i)
+                    comparateur = []
+                    tapis = []
+                    break
     if jeu2==[]:
         print("Joueur 1 à Gagné !")
     elif jeu1==[]:

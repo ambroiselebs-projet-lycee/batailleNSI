@@ -63,16 +63,13 @@ def jeu():
         comparateur.append(jeu2[0].get_nom())
         tapis.append(jeu1[0])
         tapis.append(jeu2[0])
-##        print(tapis)
-##        print(comparateur)
+        print(tapis)
+        print(comparateur)
 ##        print(f"comparateur : {comparateur}")
 
         jeu1.remove(jeu1[0])
         jeu2.remove(jeu2[0])
 
-        if not jeu1 or not jeu2:
-        # Si l'un des joueurs n'a plus de cartes, sortir de la boucle
-            break
         if comparateur[0] > comparateur[1]:
             # Joueur 1 gagne -> il récupère les cartes du comparateur
             jeu1.append(tapis[0])
@@ -131,12 +128,10 @@ def jeu():
                     comparateur = []
                     tapis = []
                     break
-    if jeu2==[]:
+    if len(jeu1)==52:
         print("Joueur 1 à Gagné !")
-    elif jeu1==[]:
+    elif len(jeu2)==52:
         print('Joueur 2 à Gagné !')
-    tapis=[]
-    comparateur=[]
 
     return True
 

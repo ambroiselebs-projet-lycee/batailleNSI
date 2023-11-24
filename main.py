@@ -47,28 +47,38 @@ class PaquetDeCarte:
         """Mélange le paquet de cartes"""
         random.shuffle(self.contenu)
 
-
-def jeu():
+# Fonction principale
+def jeu(jeu1_cartes=None, jeu2_cartes=None)->bool:
+    # Intialisation des variables
     paquet = PaquetDeCarte()
     paquet.remplir()
     paquet.melanger()
-    jeu1 = paquet.contenu[:26]
-    jeu2 = paquet.contenu[26:]
+    # Utilisation des jeux personnalisés si fournis
+    if jeu1_cartes is not None and jeu2_cartes is not None:
+        jeu1 = jeu1_cartes
+        jeu2 = jeu2_cartes
+    else:
+        jeu1 = paquet.contenu[:26]
+        jeu2 = paquet.contenu[26:]
     comparateur = []
     tapis = []
 
+    # Boucle principale
     while jeu1 and jeu2:
 
+        # On utilise un comparateur pour comparer la valeur des cartes et un tapis qui contient des cartes de la class
         comparateur.append(jeu1[0].get_nom())
         comparateur.append(jeu2[0].get_nom())
+
         tapis.append(jeu1[0])
         tapis.append(jeu2[0])
+
         print(tapis)
         print(comparateur)
-##        print(f"comparateur : {comparateur}")
 
         jeu1.remove(jeu1[0])
         jeu2.remove(jeu2[0])
+
 
         if comparateur[0] > comparateur[1]:
             # Joueur 1 gagne -> il récupère les cartes du comparateur
@@ -127,11 +137,29 @@ def jeu():
                     comparateur = []
                     tapis = []
                     break
-    if len(jeu1)==52:
+
+    # On vérifie si un des deux joueurs n'a plus de carte
+    if len(jeu1)==52 or len(jeu1) == len(jeu1_cartes)+len(jeu2_cartes):
         print("Joueur 1 à Gagné !")
-    elif len(jeu2)==52:
+        return True
+    elif len(jeu2)==52 or len(jeu2) == len(jeu1_cartes)+len(jeu2_cartes):
         print('Joueur 2 à Gagné !')
+        return True
 
-    return True
+    return False
 
-jeu()
+# Lancer le jeu
+'''
+On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
+On peut aussi lancer la fonction jeu en fournissant deux listes de cartes, qui seront utilisées comme jeux de départ. Sous la forme :
+jeu(
+    [Carte('carreau', 4)], 
+    [Carte('pique', 3)]
+)
+
+Dans ce cas là le joueur 1 gagnera
+'''
+jeu(
+    [Carte('carreau', 4)], 
+    [Carte('pique', 3)]
+)

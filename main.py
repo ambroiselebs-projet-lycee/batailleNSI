@@ -63,8 +63,9 @@ def jeu():
         comparateur.append(jeu2[0].get_nom())
         tapis.append(jeu1[0])
         tapis.append(jeu2[0])
-
-        # print(f"comparateur : {comparateur}")
+        print(tapis)
+        print(comparateur)
+##        print(f"comparateur : {comparateur}")
 
         jeu1.remove(jeu1[0])
         jeu2.remove(jeu2[0])
@@ -86,27 +87,51 @@ def jeu():
         elif comparateur[0] == comparateur[1]:
             # Bataille
             n= 1
+            print(comparateur)
+            print("BATAILLE")
 
-            while comparateur[0] == comparateur[1]:
-                for i in range(2):
-                    comparateur.append(jeu1[0].get_nom())
-                    comparateur.append(jeu2[0].get_nom())
-                    tapis.append(jeu1[0])
-                    tapis.append(jeu2[0])
-                    n+=2
-                    jeu1.remove(jeu1[0])
-                    jeu2.remove(jeu2[0])
-                if comparateur[n-1] > comparateur[n]:
-                    for i in tapis: jeu1.append(i)
-                    comparateur = []
-                    tapis = []
-                    break
-                elif comparateur[n-1] < comparateur[n]:
+            while comparateur[n-1] == comparateur[n]:
+                # On vérifie si les deux joueurs ont assé de cartes pour jouer la bataille complète
+                if len(jeu1)>=2 and len(jeu2)>=2:
+                    # On pose une première fois une carte retournée puis une seconde carte qui sera utilisé pour faire la comparaison
+                    for i in range(2):
+                        comparateur.append(jeu1[0].get_nom())
+                        comparateur.append(jeu2[0].get_nom())
+                        tapis.append(jeu1[0])
+                        tapis.append(jeu2[0])
+                        n+=2
+                        jeu1.remove(jeu1[0])
+                        jeu2.remove(jeu2[0])
+                    if comparateur[n-1] > comparateur[n]:
+                        print(comparateur)
+                        for i in tapis: jeu1.append(i)
+                        comparateur = []
+                        tapis = []
+                        break
+                    elif comparateur[n-1] < comparateur[n]:
+                        print(comparateur)
+                        for i in tapis: jeu2.append(i)
+                        tapis = []
+                        comparateur = []
+                        break
+                # Si l'un des deux joueurs n'a pas assez de carte il perd la bataille automatiquement
+                elif len(jeu1)<2:
+                    print(comparateur)
                     for i in tapis: jeu2.append(i)
                     tapis = []
                     comparateur = []
                     break
+                elif len(jeu2)<2:
+                    print(comparateur)
+                    for i in tapis: jeu1.append(i)
+                    comparateur = []
+                    tapis = []
+                    break
+    if len(jeu1)==52:
+        print("Joueur 1 à Gagné !")
+    elif len(jeu2)==52:
+        print('Joueur 2 à Gagné !')
 
     return True
-            
+
 jeu()

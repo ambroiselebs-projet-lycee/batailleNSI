@@ -159,7 +159,4 @@ jeu(
 
 Dans ce cas là le joueur 1 gagnera
 '''
-jeu(
-    [Carte('carreau', 4)], 
-    [Carte('pique', 3)]
-)
+jeu()

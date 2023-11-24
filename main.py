@@ -158,5 +158,14 @@ jeu(
 )
 
 Dans ce cas là le joueur 1 gagnera
+
+Si on veut utiliser les cartes 'Valet', 'Dame', 'Roi', 'As' on doit faire : 
+'Valet' = 11
+'Dame' = 12 
+'Roi' = 13
+'As' = 14
 '''
-jeu()
+jeu(
+    [Carte('carreau', 14)], 
+    [Carte('pique', 3)]
+)

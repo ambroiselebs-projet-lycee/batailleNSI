@@ -1,9 +1,9 @@
 # Léo & Ambroise
-
+from tkinter import *
 import random
 
 VALEURS = ['','', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As']
-COULEURS = ['', 'pique', 'coeur', 'carreau', 'trefle']
+COULEURS = ['', 's', 'h', 'd', 'c']
 
 class Carte:
     """Initialise couleur (de 1 à 4), et valeur (de 2 à 14)"""
@@ -21,8 +21,20 @@ class Carte:
         else: return int(VALEURS[self.valeur])
 
     def get_couleur(self):
-        """Renvoie la couleur de la Carte (parmi pique, coeur, carreau, trefle)"""
+        """Renvoie la couleur de la Carte (parmi s, h, d, c)"""
         return COULEURS[self.couleur]
+    
+    def image(self) :
+        """
+        méthode permettant l'affichage d'une carte"
+        """
+        fichier = "cartes/"+ str(self.valeur) + self.couleur+".gif"
+        fenetre = Tk()
+        #fenetre.geometry ("935 x 692 ")
+        image_carte = PhotoImage( file = fichier )
+        label = Label ( fenetre , image = image_carte )
+        label.pack ()
+        fenetre.mainloop ()
 
 class PaquetDeCarte:
     """Initialise un paquet de cartes, avec un attribut contenu, de type list, vide"""
@@ -47,28 +59,38 @@ class PaquetDeCarte:
         """Mélange le paquet de cartes"""
         random.shuffle(self.contenu)
 
-
-def jeu():
+# Fonction principale
+def jeu(jeu1_cartes=None, jeu2_cartes=None)->bool:
+    # Intialisation des variables
     paquet = PaquetDeCarte()
     paquet.remplir()
     paquet.melanger()
-    jeu1 = paquet.contenu[:26]
-    jeu2 = paquet.contenu[26:]
+    # Utilisation des jeux personnalisés si fournis
+    if jeu1_cartes is not None and jeu2_cartes is not None:
+        jeu1 = jeu1_cartes
+        jeu2 = jeu2_cartes
+    else:
+        jeu1 = paquet.contenu[:26]
+        jeu2 = paquet.contenu[26:]
     comparateur = []
     tapis = []
 
+    # Boucle principale
     while jeu1 and jeu2:
 
+        # On utilise un comparateur pour comparer la valeur des cartes et un tapis qui contient des cartes de la class
         comparateur.append(jeu1[0].get_nom())
         comparateur.append(jeu2[0].get_nom())
+
         tapis.append(jeu1[0])
         tapis.append(jeu2[0])
+        Carte.image(jeu1[0])
         print(tapis)
         print(comparateur)
-##        print(f"comparateur : {comparateur}")
 
         jeu1.remove(jeu1[0])
         jeu2.remove(jeu2[0])
+
 
         if comparateur[0] > comparateur[1]:
             # Joueur 1 gagne -> il récupère les cartes du comparateur
@@ -87,8 +109,8 @@ def jeu():
         elif comparateur[0] == comparateur[1]:
             # Bataille
             n= 1
-##            print(comparateur)
-##            print("BATAILLE")
+            print(comparateur)
+            print("BATAILLE")
 
             while comparateur[n-1] == comparateur[n]:
                 # On vérifie si les deux joueurs ont assé de cartes pour jouer la bataille complète
@@ -103,36 +125,59 @@ def jeu():
                         jeu1.remove(jeu1[0])
                         jeu2.remove(jeu2[0])
                     if comparateur[n-1] > comparateur[n]:
-##                        print(comparateur)
+                        print(comparateur)
                         for i in tapis: jeu1.append(i)
                         comparateur = []
                         tapis = []
                         break
                     elif comparateur[n-1] < comparateur[n]:
-##                        print(comparateur)
+                        print(comparateur)
                         for i in tapis: jeu2.append(i)
                         tapis = []
                         comparateur = []
                         break
-                    break
                 # Si l'un des deux joueurs n'a pas assez de carte il perd la bataille automatiquement
                 elif len(jeu1)<2:
-##                    print(comparateur)
+                    print(comparateur)
                     for i in tapis: jeu2.append(i)
                     tapis = []
                     comparateur = []
                     break
                 elif len(jeu2)<2:
-##                    print(comparateur)
+                    print(comparateur)
                     for i in tapis: jeu1.append(i)
                     comparateur = []
                     tapis = []
                     break
-    if len(jeu1)==52:
+
+    # On vérifie si un des deux joueurs n'a plus de carte
+    if len(jeu1)==52 or len(jeu1) == len(jeu1_cartes)+len(jeu2_cartes):
         print("Joueur 1 à Gagné !")
-    elif len(jeu2)==52:
+        return True
+    elif len(jeu2)==52 or len(jeu2) == len(jeu1_cartes)+len(jeu2_cartes):
         print('Joueur 2 à Gagné !')
+        return True
 
-    return True
+    return False
 
-jeu()
+# Lancer le jeu
+'''
+On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
+On peut aussi lancer la fonction jeu en fournissant deux listes de cartes, qui seront utilisées comme jeux de départ. Sous la forme :
+jeu(
+    [Carte('d', 4)], 
+    [Carte('s', 3)]
+)
+
+Dans ce cas là le joueur 1 gagnera
+
+Si on veut utiliser les cartes 'Valet', 'Dame', 'Roi', 'As' on doit faire : 
+'Valet' = 11
+'Dame' = 12 
+'Roi' = 13
+'As' = 14
+'''
+jeu(
+    [Carte('d', 14)], 
+    [Carte('s', 3)]
+)

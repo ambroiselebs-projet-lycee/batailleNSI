@@ -205,7 +205,7 @@ jeu(
 On peut tester également une autre double bataille avec des cartes roi dame valet et as :
 """
 jeu(
-    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 13), Carte ('trefle',4), Carte('trefle', 14)],
-    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 13), Carte ('carreau',2), Carte('pique', 11)]
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 13), Carte ('trefle',14), ],
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',2), Carte('trefle', 13), Carte ('carreau',12), ]
 )
 #joueur 1 gagne

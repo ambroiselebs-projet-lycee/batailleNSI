@@ -23,6 +23,8 @@ class Carte:
     def get_couleur(self):
         """Renvoie la couleur de la Carte (parmi pique, coeur, carreau, trefle)"""
         return COULEURS[self.couleur]
+    
+    # Pour améliorer -> Creer méthode pour comparer Carte A avec Carte B
 
 class PaquetDeCarte:
     """Initialise un paquet de cartes, avec un attribut contenu, de type list, vide"""
@@ -169,3 +171,41 @@ jeu(
     [Carte('carreau', 14)], 
     [Carte('pique', 3)]
 )
+#joueur 1 gagne
+"""
+On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
+"""
+#jeu()
+#Aléatoire
+"""
+On peut tester également si le joueur 2 peut gagner en faisant :
+"""
+jeu(
+    [Carte('trefle', 3)], 
+    [Carte('trefle', 14)]
+)
+#joueur 2 gagne
+"""
+On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
+"""
+jeu(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2)], 
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4)]
+)
+#joueur 2 gagne
+"""
+On peut faire un test avec une double bataille :
+"""
+jeu(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 5)], 
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 3), Carte ('carreau',2), Carte('pique', 8)]
+)
+#joueur 2 gagne
+"""
+On peut tester également une autre double bataille avec des cartes roi dame valet et as :
+"""
+jeu(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 13), Carte ('trefle',4), Carte('trefle', 14)],
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 13), Carte ('carreau',2), Carte('pique', 11)]
+)
+#joueur 1 gagne

@@ -62,6 +62,8 @@ def jeu(jeu1_cartes=None, jeu2_cartes=None)->bool:
     else:
         jeu1 = paquet.contenu[:26]
         jeu2 = paquet.contenu[26:]
+        jeu1_cartes = jeu1
+        jeu2_cartes = jeu2
     comparateur = []
     tapis = []
 
@@ -175,7 +177,7 @@ jeu(
 """
 On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
 """
-#jeu()
+jeu()
 #Aléatoire
 """
 On peut tester également si le joueur 2 peut gagner en faisant :

@@ -1,15 +1,8 @@
 # Léo & Ambroise
 
 import random
-import time
 
-"""
-from Objects.JeuObject import Jeu
-from Objects.JoueurObject import Joueur
-from Objects.PaquetObject import PaquetDeCarte
-from Objects.TapisObject import Tapis
-"""
-
+# Définition des variables
 VALEURS = ['', '', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As']
 COULEURS = ['', 's', 'h', 'd', 'c']
 
@@ -44,13 +37,16 @@ class PaquetDeCarte:
         self.contenuPaquetDeCarte = [Carte(couleur, valeur) for couleur in range(1, 5) for valeur in range(2, 15)]
 
     def get_carte_at(self, pos):
+        # Renvoie la carte à la position donnée
         if 0 <= pos < len(self.contenuPaquetDeCarte):
             return self.contenuPaquetDeCarte[pos]
 
     def remove(self, carte_a_retirer):
+        # Retire une carte du paquet
         self.contenuPaquetDeCarte.pop(carte_a_retirer)
 
     def melanger(self):
+        # Mélange le paquet de carte
         random.shuffle(self.contenuPaquetDeCarte)
 
 class Tapis:
@@ -58,20 +54,25 @@ class Tapis:
         self.contenuTapis = []
 
     def get_carte_at(self, pos: int):
+        # Renvoie la carte à la position donnée
         return self.contenuTapis[pos]
 
     def remove(self, carte: Carte):
+        # Retire une carte du tapis
         self.contenuTapis.pop(carte)
 
     def add(self, carte: Carte):
+        # Ajoute une carte au tapis
         self.contenuTapis.append(carte)
 
     def redistribuer(self, jeu):
+        # Redistribue les cartes du tapis au joueur
         for i in self.contenuTapis:
             jeu.add(i)
         self.clean()
 
     def clean(self):
+        # Vider le tapis
         self.contenuTapis = []
 
 class Joueur():
@@ -80,15 +81,19 @@ class Joueur():
         self.tapis = tapis
 
     def get_carte_at(self, pos: int):
+        # Renvoie la carte à la position donnée
         return self.cartesJoueur[pos]
 
     def remove(self, carte: Carte):
+        # Retire une carte du joueur
         self.cartesJoueur.pop(carte)
 
     def add(self, carte: Carte):
+        # Ajoute une carte au joueur
         self.cartesJoueur.append(carte)
 
     def ajouterTapis(self):
+        # Ajoute une carte au tapis
         if len(self.cartesJoueur) > 0:
             self.tapis.add(self.cartesJoueur[0])
             self.cartesJoueur.pop(0)
@@ -104,6 +109,7 @@ class Jeu():
         self.n = 0
 
     def comparaison(self):
+        # Comparer les cartes pour savoir qui gagne
         jeu1 = int(self.tapis.get_carte_at(self.n).get_nom())
         jeu2 = int(self.tapis.get_carte_at(self.n+1).get_nom())
 
@@ -139,6 +145,8 @@ class Jeu():
         return "fini"
 
     def bataille(self):
+        # Bataille
+
         if len(self.joueur1.cartesJoueur) < 2:
             # Joueur 1 n'a pas assez de cartes => victoire joueur 2
             print("Joueur 1 n'a pas assez de cartes")
@@ -168,6 +176,8 @@ class Jeu():
         self.comparaison()
 
     def victoire(self)->str:
+        # Vérifier si un joueur a gagné
+
         if len(self.joueur1.cartesJoueur) == 0:
             # Joueur 1 gagne
             return "joueur 2"
@@ -205,12 +215,14 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
         joueur1.ajouterTapis()
         joueur2.ajouterTapis()
 
-
+        # Lancer la bataille si la comparaison est égal
         if not fonctionJeu.comparaison(): fonctionJeu.bataille()
 
+        # Vérifier si un joueur a gagné
         if fonctionJeu.victoire() != "aucun":
             break
 
+    # Message de victoire
     print(f"Le vainceur est le {fonctionJeu.victoire()}")
 
 # Lancer le jeu

@@ -55,6 +55,7 @@ class Tapis:
         self.cartes = []
 
     def get_cartes_at(self, pos):
+        print(f"Vérification à la position {pos+1} d'un tapis de {len(self.cartes)} cartes")
         return self.cartes[pos]
     
     def get_cartes(self):
@@ -65,6 +66,11 @@ class Tapis:
 
     def add(self, carte):
         self.cartes.append(carte)
+
+    def redistribuer(self, jeu):
+        for i in self.cartes:
+            jeu.add(i)
+        self.clean()
     
     def clean(self):
         self.cartes = []
@@ -77,6 +83,9 @@ class joueur:
     def get_cartes(self):
         return self.cartes
     
+    def get_cartes_at(self, pos):
+        return self.cartes[pos]
+    
     def remove(self, carte):
         self.cartes.pop(carte)
 
@@ -84,37 +93,49 @@ class joueur:
         self.cartes.append(carte)
     
     def ajouterTapis(self):
-        self.cartes.remove(self.cartes[0])
-        self.tapis.add(self.cartes[0])
-
-
+        if (len(self.cartes) > 2):
+            self.tapis.add(self.cartes[0])
+            self.cartes.pop(0)
+        else:
+            self.tapis.redistribuer(self)
+            print(f"Redistribution des cartes, le joueur a donc :{len(self.cartes)} cartes")
+    
+        
 class jeu:
     def __init__(self, jeu1, jeu2, tapis):
         self.jeu1 = jeu1
         self.jeu2 = jeu2
         self.tapis = tapis
+        self.n = 1
 
 
     def comparaison(self):
+        print(f"{self.jeu1.get_cartes_at(0).get_nom()} vs {self.jeu2.get_cartes_at(0).get_nom()}")
         """Renvoie si la carte A est plus grande que la carte B"""
-        if (self.tapis.get_cartes_at(0).get_nom() > self.tapis.get_cartes_at(1).get_nom()):
-            for i in self.tapis.get_cartes():self.jeu1.add(i)
+        if (int(self.tapis.get_cartes_at(self.n-1).get_nom()) > int(self.tapis.get_cartes_at(self.n).get_nom())):
+            for i in self.tapis.get_cartes(): self.jeu1.add(i)
             self.tapis.clean()
+            self.n = 1
             return "jeu1"
-        elif (self.tapis.get_cartes_at(0).get_nom() < self.tapis.get_cartes_at(1).get_nom()):
-            for i in self.tapis.get_cartes():self.jeu2.add(i)
+        if (int(self.tapis.get_cartes_at(self.n-1).get_nom()) < int(self.tapis.get_cartes_at(self.n).get_nom())):
+            for i in self.tapis.get_cartes(): self.jeu2.add(i)
             self.tapis.clean()
+            self.n = 1
+
             return "jeu2"
-        elif (self.tapis.get_cartes_at(0).get_nom() == self.tapis.get_cartes_at(1).get_nom()):
+        if (int(self.tapis.get_cartes_at(self.n-1).get_nom()) == int(self.tapis.get_cartes_at(self.n).get_nom())):
+            print(f"{self.tapis.get_cartes_at(self.n-1).get_nom()} : {self.tapis.get_cartes_at(self.n).get_nom()}")
             self.bataille()
         
     def bataille(self):
         print("Bataille")
+        
         # Ajouter les cartes au tapis (face cachée et face visible)
         for i in range(2):
+            self.n+=1
+
             self.jeu1.ajouterTapis()
             self.jeu2.ajouterTapis()
-
         # Re comparer les cartes
         self.comparaison()
 
@@ -151,9 +172,12 @@ def partie(jeuContenu1=None, jeuContenu2=None):
     FonctionJeu = jeu(jeu1, jeu2, tapis)
 
     # Boucle principale
-    while len(jeu1.get_cartes()) != 0 and len(jeu2.get_cartes()) != 0:
+    while len(jeu1.get_cartes()) != 0 or len(jeu2.get_cartes()) != 0:
         jeu1.ajouterTapis()
         jeu2.ajouterTapis()
+
+        print(f"Jeu 1 : {len(jeu1.get_cartes())} cartes")
+        print(f"Jeu 2 : {len(jeu2.get_cartes())} cartes")
 
         FonctionJeu.comparaison()
         if FonctionJeu.victoire() != "aucun":

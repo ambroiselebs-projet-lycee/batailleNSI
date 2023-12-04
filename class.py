@@ -1,6 +1,8 @@
 # Léo & Ambroise
 
 import random
+import time
+
 """
 from Objects.JeuObject import Jeu
 from Objects.JoueurObject import Joueur
@@ -56,6 +58,7 @@ class Tapis:
         self.contenuTapis = []
 
     def get_carte_at(self, pos: int):
+        print(self.contenuTapis)
         return self.contenuTapis[pos]
 
     def remove(self, carte: Carte):
@@ -100,6 +103,7 @@ class Jeu():
         self.tapis = tapis
         self.paquet = paquet
         self.n = 0
+        self.tour = 0
 
     def comparaison(self):
         jeu1 = int(self.tapis.get_carte_at(self.n).get_nom())
@@ -125,11 +129,16 @@ class Jeu():
 
         if jeu1 == jeu2:
             # Bataille
+            print("----------BATAILLE-----------")
             return self.bataille()
+
+        return "fini"
 
     def bataille(self):
         # Ajouter les cartes au tapis (une face cachée et l'autre face visible)
         self.n += 2
+        self.tour+=1
+        print(f"Tour de bataille : {self.tour}")
 
         self.joueur1.ajouterTapis()
         self.joueur2.ajouterTapis()
@@ -161,8 +170,8 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
 
     # Joueur
     if joueur1Cartes is not None and joueur2Cartes is not None:
-        joueur1 = Joueur(joueur1Cartes, tapis, paquet)
-        joueur2 = Joueur(joueur2Cartes, tapis, paquet)
+        joueur1 = Joueur(joueur1Cartes, tapis)
+        joueur2 = Joueur(joueur2Cartes, tapis)
     else:
         joueur1 = Joueur(paquet.contenuPaquetDeCarte[:26], tapis)
         joueur2 = Joueur(paquet.contenuPaquetDeCarte[26:], tapis)
@@ -170,15 +179,28 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
     # Fonctions de jeu
     fonctionJeu = Jeu(joueur1, joueur2, tapis, paquet)
 
+
+    tour = 0
+
     # Boucle principale
     while len(joueur1.cartesJoueur) != len(paquet.contenuPaquetDeCarte) or len(joueur2.cartesJoueur) != len(paquet.contenuPaquetDeCarte):
         joueur1.ajouterTapis()
         joueur2.ajouterTapis()
 
+        tour+=1
+        print(f"Tour : {tour}")
+
         fonctionJeu.comparaison()
         if fonctionJeu.victoire() != "aucun":
             break
 
+        print(f"Joueur 1 : {len(joueur1.cartesJoueur)}")
+        print(f"Joueur 2 : {len(joueur2.cartesJoueur)}")
+        time.sleep(0.200)
+
     print(f"Le vainceur est {fonctionJeu.victoire()}")
 
-partie()
+partie(
+    [Carte('carreau', 14)],
+    [Carte('pique', 3)]
+)

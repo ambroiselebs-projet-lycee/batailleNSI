@@ -58,7 +58,6 @@ class Tapis:
         self.contenuTapis = []
 
     def get_carte_at(self, pos: int):
-        print(self.contenuTapis)
         return self.contenuTapis[pos]
 
     def remove(self, carte: Carte):
@@ -103,11 +102,12 @@ class Jeu():
         self.tapis = tapis
         self.paquet = paquet
         self.n = 0
-        self.tour = 0
 
     def comparaison(self):
         jeu1 = int(self.tapis.get_carte_at(self.n).get_nom())
         jeu2 = int(self.tapis.get_carte_at(self.n+1).get_nom())
+
+        print(f"{jeu1} | {jeu2}")
 
         if jeu1 > jeu2:
             #Joueur 1 gagne
@@ -158,8 +158,6 @@ class Jeu():
 
         # Ajouter les cartes au tapis (une face cachée et l'autre face visible)
         self.n += 2
-        self.tour+=1
-        print(f"Tour de bataille : {self.tour}")
 
         self.joueur1.ajouterTapis()
         self.joueur2.ajouterTapis()
@@ -194,7 +192,6 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
         joueur1 = Joueur(joueur1Cartes, tapis)
         joueur2 = Joueur(joueur2Cartes, tapis)
 
-        print(joueur1.cartesJoueur)
     else:
         joueur1 = Joueur(paquet.contenuPaquetDeCarte[:26], tapis)
         joueur2 = Joueur(paquet.contenuPaquetDeCarte[26:], tapis)
@@ -203,24 +200,16 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
     fonctionJeu = Jeu(joueur1, joueur2, tapis, paquet)
 
 
-    tour = 0
-
     # Boucle principale
     while len(joueur1.cartesJoueur) != 0 or len(joueur2.cartesJoueur) != 0:
         joueur1.ajouterTapis()
         joueur2.ajouterTapis()
 
-        tour+=1
-        print(f"Tour : {tour}")
 
         if not fonctionJeu.comparaison(): fonctionJeu.bataille()
 
         if fonctionJeu.victoire() != "aucun":
             break
-
-        print(f"Joueur 1 : {len(joueur1.cartesJoueur)}")
-        print(f"Joueur 2 : {len(joueur2.cartesJoueur)}")
-        print(f"Tapis : {tapis.contenuTapis}")
 
     print(f"Le vainceur est le {fonctionJeu.victoire()}")
 

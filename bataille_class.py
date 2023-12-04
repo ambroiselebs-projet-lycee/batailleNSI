@@ -33,65 +33,30 @@ class PaquetDeCarte:
 
     def remplir(self):
         """Remplit le paquet de cartes : en parcourant les couleurs puis les valeurs"""
-        self.contenu = [Carte(couleur, valeur) for couleur in range(1, 5) for valeur in range(2, 15)]
+        for couleur in range(1, 5):
+            for valeur in range(2, 15):
+                self.contenu.append(Carte(couleur, valeur))
 
     def get_carte_at(self, pos):
         """Renvoie la Carte qui se trouve à la position donnée"""
-        if 0 <= pos < 52:
+        if 0 <= pos < len(self.contenu):
             return self.contenu[pos]
 
     def remove(self, carte):
         """Enlève la carte du paquet"""
-        self.contenu.pop(carte)
+        self.contenu.remove(carte)
 
     def melanger(self):
         """Mélange le paquet de cartes"""
         random.shuffle(self.contenu)
 
-class joueur:
-    def __init__(self, cartes) -> None:
-        self.cartes = cartes
+class Tapis:
+    def __init__(self) -> None:
+        self.cartes = []
 
-    def get_cartes(self):
-        return self.cartes
+    def get_cartes_at(self, pos):
+        return self.cartes[pos]
     
-    def remove(self, carte):
-        self.cartes.pop(carte)
-
-    def add(self, carte):
-        self.cartes.append(carte)
-    
-    def ajouterTapis(self):
-        self.cartes.remove(self.cartes[0])
-        tapis.add(self.cartes[0])
-
-class jeu:
-    def __init__(self, jeu1, jeu2):
-        self.jeu1 = jeu1
-        self.jeu2 = jeu2
-
-    def comparaison(self):
-        """Renvoie si la carte est plus grande que la carte B"""
-        if (self.jeu1.get_nom() > self.jeu2.get_nom()):
-            for i in tapis.get_cartes():self.jeu1.add(i)
-            tapis.clean()
-            return "jeu1"
-        elif (self.jeu1.get_nom() < self.jeu2.get_nom()):
-            for i in tapis.get_cartes():self.jeu2.add(i)
-            tapis.clean()
-            return "jeu2"
-        elif (self.jeu1.get_nom() == self.jeu2.get_nom()):
-            return "bataille"
-        
-    def bataille(self):
-        while self.comparaison() == "bataille":
-            self.jeu1.ajouterTapis()
-            self.jeu2.ajouterTapis()
-            
-class tapis:
-    def __init__(self, cartes) -> None:
-        self.cartes = cartes
-
     def get_cartes(self):
         return self.cartes
     
@@ -104,155 +69,98 @@ class tapis:
     def clean(self):
         self.cartes = []
 
+class joueur:
+    def __init__(self, cartes, tapis) -> None:
+        self.cartes = cartes
+        self.tapis = tapis
+
+    def get_cartes(self):
+        return self.cartes
+    
+    def remove(self, carte):
+        self.cartes.pop(carte)
+
+    def add(self, carte):
+        self.cartes.append(carte)
+    
+    def ajouterTapis(self):
+        self.cartes.remove(self.cartes[0])
+        self.tapis.add(self.cartes[0])
+
+
+class jeu:
+    def __init__(self, jeu1, jeu2, tapis):
+        self.jeu1 = jeu1
+        self.jeu2 = jeu2
+        self.tapis = tapis
+
+
+    def comparaison(self):
+        """Renvoie si la carte A est plus grande que la carte B"""
+        if (self.tapis.get_cartes_at(0).get_nom() > self.tapis.get_cartes_at(1).get_nom()):
+            for i in self.tapis.get_cartes():self.jeu1.add(i)
+            self.tapis.clean()
+            return "jeu1"
+        elif (self.tapis.get_cartes_at(0).get_nom() < self.tapis.get_cartes_at(1).get_nom()):
+            for i in self.tapis.get_cartes():self.jeu2.add(i)
+            self.tapis.clean()
+            return "jeu2"
+        elif (self.tapis.get_cartes_at(0).get_nom() == self.tapis.get_cartes_at(1).get_nom()):
+            self.bataille()
+        
+    def bataille(self):
+        print("Bataille")
+        # Ajouter les cartes au tapis (face cachée et face visible)
+        for i in range(2):
+            self.jeu1.ajouterTapis()
+            self.jeu2.ajouterTapis()
+
+        # Re comparer les cartes
+        self.comparaison()
+
+    def victoire(self):
+        if len(self.jeu1.get_cartes()) == len(PaquetDeCarte().contenu):
+            # Joueur 1 gagne
+            return "jeu1"
+        elif len(self.jeu2.get_cartes()) == len(PaquetDeCarte().contenu):
+            # Joueur 2 gagne
+            return "jeu2"
+        else:
+            # Aucun gagnant
+            return "aucun"
+        
+
 # Fonction principale
-def jeu(jeu1_cartes=None, jeu2_cartes=None)->bool:
-    # Intialisation des variables
+def partie(jeuContenu1=None, jeuContenu2=None):
+    print("JEU")
+    # Paquet de carte
     paquet = PaquetDeCarte()
     paquet.remplir()
     paquet.melanger()
-    # Utilisation des jeux personnalisés si fournis
-    if jeu1_cartes is not None and jeu2_cartes is not None:
-        jeu1 = jeu1_cartes
-        jeu2 = jeu2_cartes
+
+    tapis = Tapis()
+
+    # Jeux
+    if jeuContenu1 is not None and jeuContenu2 is not None:
+        jeu1 = joueur(jeuContenu1, tapis)
+        jeu2 = joueur(jeuContenu2, tapis)
     else:
-        jeu1 = paquet.contenu[:26]
-        jeu2 = paquet.contenu[26:]
-        jeu1_cartes = jeu1
-        jeu2_cartes =     tapis = []
+        jeu1 = joueur(paquet.contenu[:26], tapis)
+        jeu2 = joueur(paquet.contenu[26:], tapis)
+
+    FonctionJeu = jeu(jeu1, jeu2, tapis)
 
     # Boucle principale
-    while jeu1 and jeu2:
+    while len(jeu1.get_cartes()) != 0 and len(jeu2.get_cartes()) != 0:
+        jeu1.ajouterTapis()
+        jeu2.ajouterTapis()
 
-        # On utilise un comparateur pour comparer la valeur des cartes et un tapis qui contient des cartes de la class
-        comparateur.append(jeu1[0].get_nom())
-        comparateur.append(jeu2[0].get_nom())
-
-        tapis.append(jeu1[0])
-        tapis.append(jeu2[0])
-
-        print(tapis)
-        print(comparateur)
-
-        jeu1.remove(jeu1[0])
-        jeu2.remove(jeu2[0])
+        FonctionJeu.comparaison()
+        if FonctionJeu.victoire() != "aucun":
+            break
+    
+    # Fin du jeu
+    print("Le gagnant est le joueur", FonctionJeu.victoire())
 
 
-        if comparateur[0] > comparateur[1]:
-            # Joueur 1 gagne -> il récupère les cartes du comparateur
-            jeu1.append(tapis[0])
-            jeu1.append(tapis[1])
-            tapis = []
-        elif comparateur[0] < comparateur[1]:
-            # Joueur 2 gagne -> il récupère les cartes du comparateur
-            jeu2.append(tapis[0])
-            jeu2.append(tapis[1])   
-            tapis = []
-        elif comparateur[0] == comparateur[1]:
-            # Bataille
-            n= 1
-            print(comparateur)
-            print("BATAILLE")
-
-            while comparateur[n-1] == comparateur[n]:
-                # On vérifie si les deux joueurs ont assé de cartes pour jouer la bataille complète
-                if len(jeu1)>=2 and len(jeu2)>=2:
-                    # On pose une première fois une carte retournée puis une seconde carte qui sera utilisé pour faire la comparaison
-                    for i in range(2):
-                        comparateur.append(jeu1[0].get_nom())
-                        comparateur.append(jeu2[0].get_nom())
-                        tapis.append(jeu1[0])
-                        tapis.append(jeu2[0])
-                        n+=2
-                        jeu1.remove(jeu1[0])
-                        jeu2.remove(jeu2[0])
-                    if comparateur[n-1] > comparateur[n]:
-                        print(comparateur)
-                        for i in tapis: jeu1.append(i)
-                        tapis = []
-                        break
-                    elif comparateur[n-1] < comparateur[n]:
-                        print(comparateur)
-                        for i in tapis: jeu2.append(i)
-                        tapis = []
-                        break
-                # Si l'un des deux joueurs n'a pas assez de carte il perd la bataille automatiquement
-                elif len(jeu1)<2:
-                    print(comparateur)
-                    for i in tapis: jeu2.append(i)
-                    tapis = []                    
-                    break
-                elif len(jeu2)<2:
-                    print(comparateur)
-                    for i in tapis: jeu1.append(i)                    
-                    tapis = []
-                    break
-
-    # On vérifie si un des deux joueurs n'a plus de carte
-    if len(jeu1)==52 or len(jeu1) == len(jeu1_cartes)+len(jeu2_cartes):
-        print("Joueur 1 à Gagné !")
-        return True
-    elif len(jeu2)==52 or len(jeu2) == len(jeu1_cartes)+len(jeu2_cartes):
-        print('Joueur 2 à Gagné !')
-        return True
-
-    return False
-
-# Lancer le jeu
-'''
-On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
-On peut aussi lancer la fonction jeu en fournissant deux listes de cartes, qui seront utilisées comme jeux de départ. Sous la forme :
-jeu(
-    [Carte('d', 4)], 
-    [Carte('s', 3)]
-)
-
-Dans ce cas là le joueur 1 gagnera
-
-Si on veut utiliser les cartes 'Valet', 'Dame', 'Roi', 'As' on doit faire : 
-'Valet' = 11
-'Dame' = 12 
-'Roi' = 13
-'As' = 14
-'''
-jeu(
-    [Carte('d', 14)], 
-    [Carte('s', 3)]
-)
-#joueur 1 gagne
-"""
-On peut lancer la fonction jeu sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
-"""
-jeu()
-#Aléatoire
-"""
-On peut tester également si le joueur 2 peut gagner en faisant :
-"""
-jeu(
-    [Carte('c', 3)], 
-    [Carte('c', 14)]
-)
-#joueur 2 gagne
-"""
-On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
-"""
-jeu(
-    [Carte('c', 3), Carte('h', 3), Carte ('d',2)], 
-    [Carte('d', 3), Carte('s', 3), Carte ('c',4)]
-)
-#joueur 2 gagne
-"""
-On peut faire un test avec une double bataille :
-"""
-jeu(
-    [Carte('c', 3), Carte('h', 3), Carte ('d',2), Carte('s', 3), Carte ('c',4), Carte('c', 5)], 
-    [Carte('d', 3), Carte('s', 3), Carte ('c',4), Carte('c', 3), Carte ('d',2), Carte('s', 8)]
-)
-#joueur 2 gagne
-"""
-On peut tester également une autre double bataille avec des cartes roi dame valet et as :
-"""
-jeu(
-    [Carte('c', 3), Carte('h', 3), Carte ('d',2), Carte('s', 13), Carte ('c',14), ],
-    [Carte('d', 3), Carte('s', 3), Carte ('c',2), Carte('c', 13), Carte ('d',12), ]
-)
-#joueur 1 gagne
+partie()

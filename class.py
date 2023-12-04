@@ -90,7 +90,7 @@ class Joueur():
         self.cartesJoueur.append(carte)
 
     def ajouterTapis(self):
-        if len(self.cartesJoueur) >= 2:
+        if len(self.cartesJoueur) > 0:
             self.tapis.add(self.cartesJoueur[0])
             self.cartesJoueur.pop(0)
         else:
@@ -118,6 +118,8 @@ class Jeu():
             self.tapis.clean()
             self.n = 0
 
+            return True
+
         if jeu1 < jeu2:
             # Joueur 2 gagne
             for i in self.tapis.contenuTapis:
@@ -127,14 +129,33 @@ class Jeu():
             self.tapis.clean()
             self.n = 0
 
+            return True
+
         if jeu1 == jeu2:
             # Bataille
             print("----------BATAILLE-----------")
-            return self.bataille()
+            return False
 
         return "fini"
 
     def bataille(self):
+        if len(self.joueur1.cartesJoueur) < 2:
+            # Joueur 1 n'a pas assez de cartes => victoire joueur 2
+            print("Joueur 1 n'a pas assez de cartes")
+            for i in self.tapis.contenuTapis:
+                self.joueur2.add(i)
+
+            return "joueur2"
+
+        if len(self.joueur2.cartesJoueur) < 2:
+            # Joueur 2 n'a pas assez de cartes => victoire joueur 1
+            print("Joueur 2 n'a pas assez de cartes")
+            for i in self.tapis.contenuTapis:
+                self.joueur1.add(i)
+
+
+            return "joueur1"
+
         # Ajouter les cartes au tapis (une face cachée et l'autre face visible)
         self.n += 2
         self.tour+=1
@@ -149,12 +170,12 @@ class Jeu():
         self.comparaison()
 
     def victoire(self)->str:
-        if len(self.joueur1.cartesJoueur) == len(self.paquet.contenuPaquetDeCarte):
+        if len(self.joueur1.cartesJoueur) == 0:
             # Joueur 1 gagne
-            return "joueur1"
-        if len(self.joueur2.cartesJoueur) == len(self.paquet.contenuPaquetDeCarte):
+            return "joueur 2"
+        if len(self.joueur2.cartesJoueur) == 0:
             # Joueur 2 gagne
-            return "joueur2"
+            return "joueur 1"
         else:
             # Pas encore de gagnant
             return "aucun"
@@ -172,6 +193,8 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
     if joueur1Cartes is not None and joueur2Cartes is not None:
         joueur1 = Joueur(joueur1Cartes, tapis)
         joueur2 = Joueur(joueur2Cartes, tapis)
+
+        print(joueur1.cartesJoueur)
     else:
         joueur1 = Joueur(paquet.contenuPaquetDeCarte[:26], tapis)
         joueur2 = Joueur(paquet.contenuPaquetDeCarte[26:], tapis)
@@ -183,24 +206,65 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
     tour = 0
 
     # Boucle principale
-    while len(joueur1.cartesJoueur) != len(paquet.contenuPaquetDeCarte) or len(joueur2.cartesJoueur) != len(paquet.contenuPaquetDeCarte):
+    while len(joueur1.cartesJoueur) != 0 or len(joueur2.cartesJoueur) != 0:
         joueur1.ajouterTapis()
         joueur2.ajouterTapis()
 
         tour+=1
         print(f"Tour : {tour}")
 
-        fonctionJeu.comparaison()
+        if not fonctionJeu.comparaison(): fonctionJeu.bataille()
+
         if fonctionJeu.victoire() != "aucun":
             break
 
         print(f"Joueur 1 : {len(joueur1.cartesJoueur)}")
         print(f"Joueur 2 : {len(joueur2.cartesJoueur)}")
-        time.sleep(0.200)
+        print(f"Tapis : {tapis.contenuTapis}")
 
-    print(f"Le vainceur est {fonctionJeu.victoire()}")
+    print(f"Le vainceur est le {fonctionJeu.victoire()}")
 
+# Lancer le jeu
+"""
+On peut lancer la fonction partie sans paramètre, auquel cas le jeu se déroule avec un paquet de 52 cartes.
+"""
+partie()
+"""
+Dans ce cas ci, le joueur 1 gagne
+"""
 partie(
     [Carte('carreau', 14)],
     [Carte('pique', 3)]
+)
+#joueur 1 gagne
+"""
+On peut tester si le joueur 2 peut gagner en faisant :
+"""
+partie(
+    [Carte('trefle', 3)],
+    [Carte('trefle', 14)]
+)
+#joueur 2 gagne
+"""
+On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
+"""
+partie(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2)],
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4)]
+)
+#joueur 2 gagne
+"""
+On peut faire un test avec une double bataille :
+"""
+partie(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 5)],
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 3), Carte ('carreau',2), Carte('pique', 8)]
+)
+#joueur 2 gagne
+"""
+On peut tester également une autre double bataille avec des cartes roi dame valet et as :
+"""
+partie(
+    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 13), Carte ('trefle',14), ],
+    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',2), Carte('trefle', 13), Carte ('carreau',12), ]
 )

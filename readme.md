@@ -1,6 +1,6 @@
 # Execution
 
-``Lancer le fichier main.py pour jouer``
+``Lancer le fichier class.py pour lancer le programme``
 
 
 # Fait par Léo et Ambroise

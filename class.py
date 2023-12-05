@@ -10,6 +10,7 @@ class Carte:
     def __init__(self, couleur, valeur):
         self.couleur = couleur
         self.valeur = valeur
+        print(self.couleur)
 
     def get_nom(self):
         # Renvoie le nom de la Carte As, 2, ... 10, Valet, Dame, Roi
@@ -113,7 +114,10 @@ class Jeu():
         jeu1 = int(self.tapis.get_carte_at(self.n).get_nom())
         jeu2 = int(self.tapis.get_carte_at(self.n+1).get_nom())
 
-        print(f"{jeu1} | {jeu2}")
+        jeu1_fullname = f"{self.tapis.get_carte_at(self.n).get_couleur()}{self.tapis.get_carte_at(self.n).get_nom()}"
+        jeu2_fullname = f"{self.tapis.get_carte_at(self.n+1).get_couleur()}{self.tapis.get_carte_at(self.n+1).get_nom()}"
+
+        print(f"{jeu1_fullname} | {jeu2_fullname}")
 
         if jeu1 > jeu2:
             #Joueur 1 gagne
@@ -234,38 +238,38 @@ partie()
 Dans ce cas ci, le joueur 1 gagne
 """
 partie(
-    [Carte('carreau', 14)],
-    [Carte('pique', 3)]
+    [Carte(3, 14)],
+    [Carte(1, 3)]
 )
 #joueur 1 gagne
 """
 On peut tester si le joueur 2 peut gagner en faisant :
 """
 partie(
-    [Carte('trefle', 3)],
-    [Carte('trefle', 14)]
+    [Carte(4, 3)],
+    [Carte(4, 14)]
 )
 #joueur 2 gagne
 """
 On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
 """
 partie(
-    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2)],
-    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4)]
+    [Carte(4, 3), Carte(2, 3), Carte (3,2)],
+    [Carte(3, 3), Carte(1, 3), Carte (4,4)]
 )
 #joueur 2 gagne
 """
 On peut faire un test avec une double bataille :
 """
 partie(
-    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 5)],
-    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',4), Carte('trefle', 3), Carte ('carreau',2), Carte('pique', 8)]
+    [Carte(4, 3), Carte(2, 3), Carte (3,2), Carte(1, 3), Carte (4,4), Carte(4, 5)],
+    [Carte(3, 3), Carte(1, 3), Carte (4,4), Carte(4, 3), Carte (3,2), Carte(1, 8)]
 )
 #joueur 2 gagne
 """
 On peut tester également une autre double bataille avec des cartes roi dame valet et as :
 """
 partie(
-    [Carte('trefle', 3), Carte('coeur', 3), Carte ('carreau',2), Carte('pique', 13), Carte ('trefle',14), ],
-    [Carte('carreau', 3), Carte('pique', 3), Carte ('trefle',2), Carte('trefle', 13), Carte ('carreau',12), ]
+    [Carte(4, 3), Carte(2, 3), Carte (3,2), Carte(1, 13), Carte (4,14), ],
+    [Carte(3, 3), Carte(1, 3), Carte (4,2), Carte(4, 13), Carte (3,12), ]
 )

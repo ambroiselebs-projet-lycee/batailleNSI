@@ -217,3 +217,42 @@ def partie(joueur1Cartes=None, joueur2Cartes=None):
 
 # Lancer le jeu
 partie()
+"""
+Dans ce cas ci, le joueur 1 gagne
+partie(
+    [Carte(3, 14)],
+    [Carte(1, 3)]
+)
+"""
+#joueur 1 gagne
+"""
+On peut tester si le joueur 2 peut gagner en faisant :
+partie(
+    [Carte(4, 3)],
+    [Carte(4, 14)]
+)
+"""
+#joueur 2 gagne
+"""
+On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
+partie(
+    [Carte(4, 3), Carte(2, 3), Carte (3,2)],
+    [Carte(3, 3), Carte(1, 3), Carte (4,4)]
+)
+"""
+#joueur 2 gagne
+"""
+On peut faire un test avec une double bataille :
+partie(
+    [Carte(4, 3), Carte(2, 3), Carte (3,2), Carte(1, 3), Carte (4,4), Carte(4, 5)],
+    [Carte(3, 3), Carte(1, 3), Carte (4,4), Carte(4, 3), Carte (3,2), Carte(1, 8)]
+)
+"""
+#joueur 2 gagne
+"""
+On peut tester également une autre double bataille avec des cartes roi dame valet et as :
+partie(
+    [Carte(4, 3), Carte(2, 3), Carte (3,2), Carte(1, 13), Carte (4,14), ],
+    [Carte(3, 3), Carte(1, 3), Carte (4,2), Carte(4, 13), Carte (3,12), ]
+)
+"""

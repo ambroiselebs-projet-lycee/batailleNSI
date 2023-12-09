@@ -142,12 +142,14 @@ class Jeu:
         # Verifier si les joueurs ont assez de cartes
         if len(self.joueur1.cartesJoueur) < 2:
             # Joueur 1 n'a pas assez de cartes => joueur 2 gagne
+            print("Joueur 1 n'a pas assez de cartes")
             while not self.joueur1.cartesJoueur.est_vide():
                 self.joueur2.add(self.joueur1.remove(self.joueur1.cartesJoueur.get()))
             return "joueur 2"
 
         if len(self.joueur2.cartesJoueur) < 2:
             # Joueur 2 n'a pas assez de cartes => joueur 1 gagne
+            print("Joueur 2 n'a pas assez de cartes")
             while not self.joueur2.cartesJoueur.est_vide():
                 self.joueur1.add(self.joueur2.remove(self.joueur2.cartesJoueur.get()))
             return "joueur 1"
@@ -179,9 +181,8 @@ def partie(joueur1cartes=None, joueur2cartes=None):
     tapis2 = Tapis()
 
     # Création des joueurs
-    if joueur1cartes is None:
+    if joueur1cartes is None and joueur2cartes is None:
         joueur1cartes = [paquet.contenuPaquetDeCarte.pop() for i in range(26)]
-    if joueur2cartes is None:
         joueur2cartes = [paquet.contenuPaquetDeCarte.pop() for i in range(26)]
 
     joueur1 = Joueur(joueur1cartes, tapis1)

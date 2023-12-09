@@ -4,6 +4,7 @@ import random
 VALEURS = ['', '', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi', 'As']
 COULEURS = ['', 's', 'h', 'd', 'c']
 
+
 class Pile:
     def __init__(self):
         self.elements = []
@@ -20,6 +21,7 @@ class Pile:
 
     def get(self):
         return self.elements[0]
+
     def __len__(self):
         return len(self.elements)
 
@@ -44,6 +46,7 @@ class Carte:
     def get_couleur(self):
         return COULEURS[self.couleur]
 
+
 class PaquetDeCarte:
     def __init__(self):
         self.contenuPaquetDeCarte = []
@@ -56,6 +59,7 @@ class PaquetDeCarte:
 
     def melanger(self):
         random.shuffle(self.contenuPaquetDeCarte)
+
 
 class Tapis:
     def __init__(self):
@@ -72,6 +76,7 @@ class Tapis:
 
     def clean(self):
         self.contenuTapis = Pile()
+
 
 class Joueur:
     def __init__(self, cartes, tapis: Tapis):
@@ -91,6 +96,7 @@ class Joueur:
 
     def ajouter_tapis(self):
         self.tapisJoueur.add(self.cartesJoueur.depiler())
+
 
 class Jeu:
     def __init__(self, j1: Joueur, j2: Joueur, t1: Tapis, t2: Tapis, paquet: PaquetDeCarte):
@@ -150,7 +156,7 @@ class Jeu:
         self.joueur1.ajouter_tapis()
         self.joueur2.ajouter_tapis()
 
-        #Comparaison
+        # Comparaison
         self.comparaison()
 
     def victoire(self):
@@ -160,6 +166,7 @@ class Jeu:
             return "joueur 1"
         else:
             return "aucun"
+
 
 def partie(joueur1cartes=None, joueur2cartes=None):
     # Création des paquets de cartes
@@ -192,6 +199,7 @@ def partie(joueur1cartes=None, joueur2cartes=None):
 
     print(f"Le gagnant est {jeu.victoire()}")
 
+
 # Lancer le jeu
 partie()
 """
@@ -201,7 +209,7 @@ partie(
     [Carte(1, 3)]
 )
 """
-#joueur 1 gagne
+# joueur 1 gagne
 """
 On peut tester si le joueur 2 peut gagner en faisant :
 partie(
@@ -209,7 +217,7 @@ partie(
     [Carte(4, 14)]
 )
 """
-#joueur 2 gagne
+# joueur 2 gagne
 """
 On peut faire un test également avec une bataille, c'est a dire que les deux joueurs ont la même carte, par exemple :
 partie(
@@ -217,7 +225,7 @@ partie(
     [Carte(3, 3), Carte(1, 3), Carte (4,4)]
 )
 """
-#joueur 2 gagne
+# joueur 2 gagne
 """
 On peut faire un test avec une double bataille :
 partie(
@@ -225,7 +233,7 @@ partie(
     [Carte(3, 3), Carte(1, 3), Carte (4,4), Carte(4, 3), Carte (3,2), Carte(1, 8)]
 )
 """
-#joueur 2 gagne
+# joueur 2 gagne
 """
 On peut tester également une autre double bataille avec des cartes roi dame valet et as :
 partie(
